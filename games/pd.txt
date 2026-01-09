@@ -1,0 +1,5 @@
+# pd.txt
+2
+Prisoner's Dilemma
+quiet      -1  -1    -12  0
+confess     0 -12     -8 -8
