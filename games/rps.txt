@@ -1,0 +1,6 @@
+# rps.txt
+3
+Rock Paper Scissors
+rock      0 0    -1 1     1 -1
+paper     1 -1    0 0    -1 1
+scissors -1 1     1 -1    0 0
