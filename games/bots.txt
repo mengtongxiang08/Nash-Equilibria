@@ -1,0 +1,5 @@
+# bots.txt
+2
+Battle of the Sexes
+opera  3 2    0 0
+soccer 0 0    2 3
