@@ -1,15 +1,18 @@
 """
 Nash Equilibria through Simulation
 
-Author: YOUR NAME
-Date: mm/dd/yyyy
+The purpose of this code is to simulate the emergence of Nash equilibria strategy through repeated gameplay.
 
-How to run:
+Angela Xiang
+1/202/026
+How to run in the command line
   python main.py games/pd.txt
   python main.py games/rps.txt
+                       ^ change this with the name of the text file (ex. pd, rps, bots, sh)   
 
-AI Usage: ...
-Sources: ...
+AI Usage: asked Google gemini "how to print objects and decimal values 3 places"
+
+Sources: https://www.w3schools.com/python/python_string_formatting.asp
 """
 
 import sys
