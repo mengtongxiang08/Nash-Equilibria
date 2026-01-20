@@ -31,19 +31,11 @@ def parse_game_file(filename):
     payoff_matrix[r][c] = (payoff_for_row_player, payoff_for_col_player)
     """
     lines = list(_useful_lines(filename))
-    if len(lines) < 2:
-        raise ValueError("File must contain at least #choices and a title.")
-
     num_choices = int(lines[0])
 
     title = lines[1]
 
     row_lines = lines[2:]
-    if len(row_lines) < num_choices:
-        raise ValueError(
-            f"Expected at least {num_choices} strategy rows after the title, "
-            f"but found {len(row_lines)}."
-        )
 
     choice_names = []
     payoff_matrix = []

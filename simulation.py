@@ -1,61 +1,89 @@
 """
-Simulation logic:
-- 10 players
-- Round robin each session => 45 games per session
-- Run many sessions (default 50 sessions => 2250 games)
+simulation functions.
 
 """
 
-from player import Player
+from player_two_choice import PlayerTwoChoice
+from player_n_choice import PlayerNChoice
 
 def play_one_game(playerA, playerB, payoff_matrix):
     """
-    Plays one game between playerA (row player) and playerB (col player).
+    Play one game between two players and update them.
+
+    - For 2-choice players, we log the probability before choosing,
+      and the action they chose. so bubble size = action counts.
 
     Returns:
-      (choiceA, choiceB, payoffA, payoffB)
+        (choiceA, choiceB, payoffA, payoffB)
     """
-    choiceA = playerA.pick_choice()
-    choiceB = playerB.pick_choice()
+
+    # strategy before choosing
+    if hasattr(playerA, "p1"):
+        pA0 = 1.0 - playerA.p1
+        pA1 = playerA.p1
+    if hasattr(playerB, "p1"):
+        pB0 = 1.0 - playerB.p1
+        pB1 = playerB.p1
+
+    choiceA = playerA.choose()
+    choiceB = playerB.choose()
+
+    # log what they did at that probability
+    if hasattr(playerA, "decision_history"):
+        playerA.decision_history.append((pA0, pA1, choiceA))
+    if hasattr(playerB, "decision_history"):
+        playerB.decision_history.append((pB0, pB1, choiceB))
 
     payoffA, payoffB = payoff_matrix[choiceA][choiceB]
 
-    # Update each player based on their own payoff
     playerA.update_after_game(choiceA, payoffA)
     playerB.update_after_game(choiceB, payoffB)
 
-    return choiceA, choiceB, payoffA, payoffB
+    return (choiceA, choiceB, payoffA, payoffB)
 
 
-def run_round_robin(players, payoff_matrix):
+
+def run_sessions(num_choices, payoff_matrix, sessions=50, num_players=10):
     """
-    Run one full round robin:
-      P1 plays P2..P10, P2 plays P3..P10, etc.
+    Run many sessions of a 10-player round robin.
 
-    Returns a list of game results.
-    """
-    results = []
-    n = len(players)
-    for i in range(n):
-        for j in range(i + 1, n):
-            pA = players[i]
-            pB = players[j]
-            results.append(play_one_game(pA, pB, payoff_matrix))
-    return results
+    For each session:
+      - every player plays every other player once
 
 
-def run_sessions(num_choices, payoff_matrix, num_players=10, sessions=50):
-    """
-    Create players and run multiple sessions.
+      - we count how many times each player cohose each strategy
+        for each matchup (P1 vs P2, etc.)
+
+    Args:
+        num_choices: number of choices in the game (2 or 3 here)
+        payoff_matrix: payoff matrix from file
+        sessions: how many full round robin sessions (min 50 required)
+        num_players: should be 10 per assignment
 
     Returns:
-      players (list[Player])
-      all_session_results (list[list[game_result]])
+        players: list of Player objects
+        matchup_counts: dict with action counts for each matchup (only for 2-choice games)
     """
-    players = [Player(f"P{i+1}", num_choices) for i in range(num_players)]
-    all_session_results = []
 
-    for s in range(1, sessions + 1):
-        session_results = run_round_robin(players, payoff_matrix)
-        all_session_results.append(session_results)
-    return players, all_session_results
+    if num_choices == 2:
+        players = [PlayerTwoChoice(f"P{i+1}", start_p1=0.5) for i in range(num_players)]
+    else:
+        players = [PlayerNChoice(f"P{i+1}", num_choices=num_choices) for i in range(num_players)]
+
+    matchup_counts = {}
+    if num_choices == 2:
+        for i in range(num_players):
+            for j in range(i + 1, num_players):
+                matchup_counts[(i, j)] = {"A": [0, 0], "B": [0, 0]}
+
+    for session_index in range(sessions):
+        for i in range(num_players):
+            for j in range(i + 1, num_players):
+                choiceA, choiceB, payoffA, payoffB = play_one_game(
+                    players[i], players[j], payoff_matrix
+                )
+                if num_choices == 2:
+                    matchup_counts[(i, j)]["A"][choiceA] += 1
+                    matchup_counts[(i, j)]["B"][choiceB] += 1
+
+    return players, matchup_counts
