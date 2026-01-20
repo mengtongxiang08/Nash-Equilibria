@@ -1,12 +1,16 @@
 """
 Game file parser for Nash Equilibria Simulation project.
 
+Angela Xiang
+1/20/2026
+
 - Ignore blank lines and lines starting with '#'
 - First real line: number of choices (int)
 - Second real line: title (string)
 - Next lines: a row label followed by payoff numbers
 
-
+AI: asked Google GEmini "how to parse a python txt. file"
+Sources: https://www.w3schools.com/python/python_file_open.asp, https://hackernoon.com/how-to-read-text-file-in-python
 """
 
 def _useful_lines(filename):
