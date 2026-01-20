@@ -1,9 +1,14 @@
 """
 PlayerTwoChoice class (for games with exactly 2 choices)
 
+Angela Xiang 
+1/20/2026
+
 player for 2-choice games.
 Instead of storing [p0, p1], we store only p1.
 Because p0 is always (1 - p1).
+
+Sources + AI : none
 
 """
 
@@ -31,7 +36,6 @@ def clamp(x, low, high):
 
 class PlayerTwoChoice:
     """
-
       - p1: probability of choosing choice #1 (index 1)
       - games_played, total_score, average_score
       - history_p1: list of p1 values over time (for plotting)
@@ -85,16 +89,14 @@ class PlayerTwoChoice:
 
           - If payoff > average, increase probability of the choice we used.
           - If payoff < average, decrease probability of the choice we used.
-
-        We store only p1, so:
           - If we chose choice 1, we do p1 += change
           - If we chose choice 0, we do p1 -= change
 
         Args:
             chosen_index: 0 or 1 (what we chose this game)
             payoff: the score we got in this game (an int)
-            step_divisor: bigger = slower learning (more stable)
-            eps: prevents p1 from becoming exactly 0 or 1 (avoids “stuck forever”)
+            step_divisor: the bigger this is the slower the pplayer adapts
+            eps: prevents p1 from becoming exactly 0 or 1 (avoids “stuck forever” and the player always just chooses that)
 
         Returns:
             None
@@ -108,7 +110,8 @@ class PlayerTwoChoice:
         else:
             self.p1 -= change
 
-        # Keep p1 inside a safe range so the player still explores sometimes
+        # Keep p1 inside a safe range
+        #0.001 - 0. 99
         self.p1 = clamp(self.p1, eps, 1.0 - eps)
 
         # Update score stats
