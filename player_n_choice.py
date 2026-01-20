@@ -1,13 +1,14 @@
 """
 PlayerNChoice class (for games with 3+ choices, like Rock-Paper-Scissors)
 
-Author: YOUR NAME
-Date: mm/dd/yyyy
+Author: Angela Xiang
+Date: 1/202026
+This file defines a player that stores a list of probabilities (specifically for the situation when the player has more than 2 choices, ex. rock paper scissors).
 
-This file defines a simple player that stores a list of probabilities.
+AI Usage: asked google gemini (AI overview) - "how to create a shallow vs deep copy of list" 
+"how to use List Slicing [:] to refer to original list"
 
-AI Usage: ...
-Sources: ...
+Sources: 
 """
 
 import random
@@ -35,13 +36,11 @@ def clamp(x, low, high):
 class PlayerNChoice:
     """
     A player for games with N choices (RPS uses N=3).
-
-    What it stores:
+     - argument: num_choices (3 for RPS)
+    player choice includes
       - probs: list like [p0, p1, p2]
       - games_played, total_score, average_score
-      - history_probs: list of snapshots of probs over time
-
-    How it learns:
+      - history_probs: list of snapshots of probabilities over time
       - After each game, it adjusts the probability of the chosen move
         based on (payoff - average_score), then re-normalizes so probs sum to 1.
     """
@@ -71,7 +70,7 @@ class PlayerNChoice:
         Choose a move using the probability list.
 
         Args:
-            None
+            self
 
         Returns:
             An int index from 0..num_choices-1
@@ -91,12 +90,12 @@ class PlayerNChoice:
           then clamp probabilities to avoid exact 0 or 1
           re-normalize so they sum to 1
          update score stats
-       and save history snapshot
+       and save history for that scenario
 
         Args:
             chosen_index: which move we chose
             payoff: score for that move this game
-            step_divisor: bigger = slower learning
+            step_divisor: if this is bigger, the player learns more slowly (adapts more slowly)
             eps: avoids probabilities becoming exactly 0
 
         Returns:
@@ -108,10 +107,10 @@ class PlayerNChoice:
         self.probs[chosen_index] += change
         for i in range(self.num_choices):
             self.probs[i] = clamp(self.probs[i], eps, 1.0)
-
         total = sum(self.probs)
         self.probs = [p / total for p in self.probs]
         self.games_played += 1
         self.total_score += payoff
         self.average_score = self.total_score / self.games_played
         self.history_probs.append(self.probs[:])
+        //save that scenario
