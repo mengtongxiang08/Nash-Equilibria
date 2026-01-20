@@ -1,26 +1,24 @@
 """
-Plotting on ONE screen with 5 charts (2x3 grid, last spot empty).
+Plotting class to generate all 5 charts on one screen (2x3 grid, last spot empty).
 
-- For 2-choice games: regular matplotlib scatter on x+y=1 line.
-- For RPS: ternary scatter plots using python-ternary INSIDE subplots.
+- For RPS: ternary scatter plots
 
-Author: YOUR NAME
-Date: mm/dd/yyyy
+Author: Angela Xiang
+Date:1/20/2026
+
+AI Use: Google AI gemini "how to create legend in mat plot lib and color in the dots different colors"
+Sources: https://plotly.com/python/ternary-plots/
+https://www.goldensoftware.com/101-guide-to-ternary-class-scatter-plots/
 """
 from matplotlib.lines import Line2D
 
 import matplotlib.pyplot as plt
 def show_5_plots_two_choice_one_screen(title, choice_names, players, decimals=3, size_scale=80):
     """
-    Show 5 matchups in ONE window for a 2-choice game.
-
-    This matches the rubric AND looks like the teacher sample:
-
     - Each dot is a strategy point (probabilities) like (p(choice0), p(choice1))
-    - Bubble size = number of times the player ACTUALLY CHOSE that strategy
-      while they were at (about) that probability.
+    - Bubble size = number of times the player play that strategy
+      while they were at (almsot) that probability.
 
-    Example:
       If a player had p1=0.90 many times AND kept choosing choice1,
       you will see a big bubble near (0.10, 0.90).
 
@@ -37,9 +35,7 @@ def show_5_plots_two_choice_one_screen(title, choice_names, players, decimals=3,
 
     def points_from_decisions(player):
         """
-        Turn decision_history into scatter points.
-
-        We group by rounded probability, but bubble size depends on CHOICES:
+        Turn decision_history -> scatter points.
           - if chosen == 0, we add to the bubble at (p0,p1) for action 0
           - if chosen == 1, we add to the bubble at (p0,p1) for action 1
         """
@@ -49,8 +45,7 @@ def show_5_plots_two_choice_one_screen(title, choice_names, players, decimals=3,
             x = round(p0, decimals)
             y = round(p1, decimals)
 
-            # We count every decision at that (x,y)
-            key = (x, y)
+            key = (x, y) #count decision at x,y
             counts[key] = counts.get(key, 0) + 1
 
         xs, ys, sizes = [], [], []
