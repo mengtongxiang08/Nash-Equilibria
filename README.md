@@ -1,5 +1,5 @@
 This project uses Python simulations to show how Nash equilibria can emerge over time through repeated gameplay.
-Instead of solving games using math formulas, players repeatedly play games, learn from their outcomes, and slowly adjust their strategies. Over many games, their behavior converges to a Nash equilibrium.
+Players repeatedly play games, learn from their outcomes, and slowly adjust their strategies. Over many games, their behavior converges to a Nash equilibrium.
 
 Run the program from the command line:
 python main.py pd.txt
