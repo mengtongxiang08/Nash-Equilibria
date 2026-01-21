@@ -1,6 +1,12 @@
 """
-simulation functions.
+simulation functions
+- Players choose actions
+-  look up payoffs from the payoff matrix
+- Players update their strategy after each game
+-  repeat many games in a round-robin format
 
+AI use: None
+Sources: https://www.w3schools.com/python/python_dictionaries.asp
 """
 
 from player_two_choice import PlayerTwoChoice
